@@ -1,4 +1,4 @@
-temp/
+temp/*
 config.yaml
 
 runner-build
