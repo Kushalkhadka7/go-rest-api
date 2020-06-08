@@ -1,0 +1,15 @@
+server:
+  port: serverport
+  readTimeOut: server reate timeout
+  writeTimeOut: server write timeout
+
+database:
+  client: db client
+  port: db port
+  user: db user
+  password: db password
+  host: db host
+  db: database name
+
+EXAMPLE_VAR: "variable from config.yml"
+EXAMPLE_PATH: "path from config.yml"

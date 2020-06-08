@@ -9,7 +9,7 @@ database:
   user: "jump"
   password: "jump@123"
   host: "localhost"
-  db: "express"
+  db: "employees"
 
 EXAMPLE_VAR: "variable from config.yml"
 EXAMPLE_PATH: "path from config.yml"

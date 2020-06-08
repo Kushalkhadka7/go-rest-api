@@ -20,6 +20,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	db.Migrate()
 
 	router := routes.New(db)
 
@@ -29,5 +30,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	defer db.DB.Close()
+	defer db.Close()
 }
