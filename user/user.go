@@ -2,6 +2,8 @@ package user
 
 import (
 	"go-rest-api/db"
+	"go-rest-api/store"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -9,42 +11,41 @@ import (
 
 // API for user.
 type API struct {
-	Users  *Service
+	Users  *ServiceStore
 	Logger *logrus.Logger
-	Db     *db.Conn
 }
 
 // New creates new user api.
 func New(log *logrus.Logger, db *db.Conn) *API {
-	service := NewService()
+
+	userModal := store.NewUser(db)
+	service := NewService(userModal, log)
 
 	return &API{
 		Users:  service,
 		Logger: log,
-		Db:     db,
 	}
 }
 
 // Router creates routes for user.
 func (api *API) Router(router *gin.RouterGroup) {
-	router.GET("/ping", api.get)
+	router.GET("/ping", api.Get)
 }
 
-// Result gives api result.
-type Result struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
+// Get user information.
+func (api *API) Get(c *gin.Context) {
+	data, err := api.Users.Get()
 
-func (api *API) get(c *gin.Context) {
+	if err != nil {
+		c.JSON(err.HTTPStatusCode, gin.H{
+			"error": err,
+		})
 
-	var result Result
-	api.Db.Table("traits").Select("name,id").Scan(&result)
+		return
+	}
 
-	api.Logger.Info(result)
-
-	c.JSON(200, gin.H{
-		"data":    result,
-		"message": "hello there pong",
+	c.JSON(http.StatusOK, gin.H{
+		"data": data,
 	})
+
 }

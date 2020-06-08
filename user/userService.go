@@ -1,17 +1,37 @@
 package user
 
-import error "go-rest-api/errors"
+import (
+	error "go-rest-api/errors"
+	"go-rest-api/modal"
 
-type Service struct {
+	"github.com/sirupsen/logrus"
+)
+
+// Service handles computations for users.
+type Service interface {
+	Get() ([]modal.User, *error.Response)
 }
 
-func NewService() *Service {
-	return &Service{}
+// ServiceStore connects modal and service.
+type ServiceStore struct {
+	Store Service
 }
 
-func (us *Service) get() (map[string]string, *error.Response) {
-	user := make(map[string]string)
-	user["fname"] = "kushal"
+// NewService creates new user service.
+func NewService(store Service, log *logrus.Logger) *ServiceStore {
+
+	return &ServiceStore{
+		Store: store,
+	}
+}
+
+// Get list of all users.
+func (us *ServiceStore) Get() ([]modal.User, *error.Response) {
+
+	user, err := us.Store.Get()
+	if err != nil {
+		return nil, err
+	}
 
 	return user, nil
 }
